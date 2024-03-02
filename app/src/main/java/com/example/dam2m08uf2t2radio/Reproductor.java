@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.io.IOException;
+
 public class Reproductor extends AppCompatActivity {
     private NotificationManager notificationManager;
     private MediaPlayer player;
@@ -21,13 +23,14 @@ public class Reproductor extends AppCompatActivity {
     private boolean isPlaying = false;
     private ProgressControl progressControl;
     private ImageView imageView;
-    //private Switch bucle;//borrar
+    //private Switch bucle; //borrar
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reproductor);
 
-        //this.bucle = this.findViewById(R.id.bucle);// no hay boton de bucle hay
+        //this.bucle = this.findViewById(R.id.bucle); // no hay boton de bucle hay
 
         Intent intent = this.getIntent();
         this.title = findViewById(R.id.titol);
@@ -51,6 +54,28 @@ public class Reproductor extends AppCompatActivity {
         this.seekBar.setMax(this.player.getDuration());
 
     }*/
+    private void startMediaPlayer() {//inicia el audio :D
+        if (player == null) {
+            player = new MediaPlayer();
+            try {
+                player.setDataSource(streamUrl);
+                player.prepare();
+                player.start();
+                isPlaying = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                //throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void stopMediaPlayer() {//para el audio :D
+        if (player != null) {
+            player.release();
+            player = null;
+            isPlaying = false;
+        }
+    }
 //mas metodos
 
     class ProgressControl extends Thread{//es un copia y pega del ejemplo media player hay q mirarlo
