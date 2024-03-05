@@ -48,7 +48,6 @@ public class Reproductor extends AppCompatActivity {
         this.descripcion = findViewById(R.id.descripciontxt);
         this.descripcion.setText(emisora.getDescripcio());//nomEmisora
         this.streamUrl = emisora.getUrl();
-        this.imageView = findViewById(R.id.image);
         this.stop = findViewById(R.id.stop_button);
         this.play = findViewById(R.id.play_button);
    //     this.imageView.setImageDrawable(getDrawable(intent.getIntExtra("image",0)));
