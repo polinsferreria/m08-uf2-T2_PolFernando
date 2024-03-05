@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        tools:layout_editor_absoluteX="167dp"
-        tools:layout_editor_absoluteY="170dp" />
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="70dp" />
 
     <ImageView
         android:id="@+id/image"
@@ -38,4 +38,12 @@
         android:text="Button"
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="314dp" />
+
+    <TextView
+        android:id="@+id/descripciontxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="188dp"
+        tools:layout_editor_absoluteY="241dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

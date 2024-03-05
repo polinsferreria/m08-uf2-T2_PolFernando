@@ -21,6 +21,7 @@ public class Reproductor extends AppCompatActivity {
     private NotificationManager notificationManager;
     private MediaPlayer player;
     private TextView title;
+    private TextView descripcion;
     private String streamUrl;
 
     private boolean isPlaying = false;
@@ -42,6 +43,7 @@ public class Reproductor extends AppCompatActivity {
 
         this.title = findViewById(R.id.titol);
         this.title.setText(emisora.getNom());//nomEmisora
+        this.descripcion.setText(emisora.getDescripcio());//nomEmisora
         this.streamUrl = emisora.getUrl();
         this.imageView = findViewById(R.id.image);
         this.stop = findViewById(R.id.stop_button);
