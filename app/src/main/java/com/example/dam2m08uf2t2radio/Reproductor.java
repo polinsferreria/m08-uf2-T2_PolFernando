@@ -100,7 +100,7 @@ public class Reproductor extends AppCompatActivity {
                 Toast.makeText(this, "Error desconegut", Toast.LENGTH_SHORT).show();
             }
         }
-
+    }
 
     private void stopMediaPlayer() {//para el audio :D
         if (player != null) {
