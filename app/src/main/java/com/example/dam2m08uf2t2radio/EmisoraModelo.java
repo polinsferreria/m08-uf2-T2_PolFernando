@@ -11,7 +11,7 @@ public class EmisoraModelo implements Serializable {
             "https://shoutcast.ccma.cat/ccma/catalunyamusicaHD.mp3",
             "https://shoutcast.ccma.cat/ccma/icatHD.mp3"};
 
-    private final String[] descripcioEmissora = {};
+    private final String[] descripcioEmissora = {"1", "2" ,"3" ,"4"};
 
     private String nom;
 

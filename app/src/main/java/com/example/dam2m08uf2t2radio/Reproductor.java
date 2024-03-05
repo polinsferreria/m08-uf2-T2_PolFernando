@@ -4,12 +4,14 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
@@ -43,6 +45,7 @@ public class Reproductor extends AppCompatActivity {
 
         this.title = findViewById(R.id.titol);
         this.title.setText(emisora.getNom());//nomEmisora
+        this.descripcion = findViewById(R.id.descripciontxt);
         this.descripcion.setText(emisora.getDescripcio());//nomEmisora
         this.streamUrl = emisora.getUrl();
         this.imageView = findViewById(R.id.image);
@@ -79,7 +82,7 @@ public class Reproductor extends AppCompatActivity {
 
     }*/
 
-    private void startMediaPlayer() {//inicia el audio :D
+    private void startMediaPlayer() {
         if (player == null) {
             player = new MediaPlayer();
             try {
@@ -89,10 +92,15 @@ public class Reproductor extends AppCompatActivity {
                 isPlaying = true;
             } catch (IOException e) {
                 e.printStackTrace();
-                //throw new RuntimeException(e);
+                Log.e("MediaPlayer", "Error setting data source: " + e.getMessage());
+                Toast.makeText(this, "Error al reproduir la ràdio", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("MediaPlayer", "Error desconegut: " + e.getMessage());
+                Toast.makeText(this, "Error desconegut", Toast.LENGTH_SHORT).show();
             }
         }
-    }
+
 
     private void stopMediaPlayer() {//para el audio :D
         if (player != null) {
