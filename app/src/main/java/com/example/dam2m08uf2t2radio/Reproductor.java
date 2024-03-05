@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 public class Reproductor extends AppCompatActivity {
     private NotificationManager notificationManager;
@@ -37,15 +38,17 @@ public class Reproductor extends AppCompatActivity {
         //this.bucle = this.findViewById(R.id.bucle); // no hay boton de bucle hay
 
         Intent intent = this.getIntent();
+        EmisoraModelo emisora = (EmisoraModelo) intent.getSerializableExtra("Emisora");
+
         this.title = findViewById(R.id.titol);
-        this.title.setText(intent.getStringExtra("title"));//nomEmisora
-        this.streamUrl = intent.getStringExtra("urlEmisora");
+        this.title.setText(emisora.getNom());//nomEmisora
+        this.streamUrl = emisora.getUrl();
         this.imageView = findViewById(R.id.image);
         this.stop = findViewById(R.id.stop_button);
         this.play = findViewById(R.id.play_button);
-        this.imageView.setImageDrawable(getDrawable(intent.getIntExtra("image",0)));
+   //     this.imageView.setImageDrawable(getDrawable(intent.getIntExtra("image",0)));
 
-        this.player = MediaPlayer.create(this, intent.getIntExtra("audio", 0));
+//        this.player = MediaPlayer.create(this, intent.getIntExtra("audio", 0));
         /*this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {

@@ -2,6 +2,7 @@ package com.example.dam2m08uf2t2radio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -51,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
     private void  accionBoton(int num){
-
-        Toast.makeText(this, nomEmisoras[num], Toast.LENGTH_SHORT).show();
-        // añadir intent a nueva activity
+        EmisoraModelo em = new EmisoraModelo(num);
+        Intent i = new Intent(this, Reproductor.class);
+        i.putExtra("Emisora",em);
+        startActivity(i);
     }
 }

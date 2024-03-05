@@ -1,6 +1,8 @@
 package com.example.dam2m08uf2t2radio;
 
-public class EmisoraModelo {
+import java.io.Serializable;
+
+public class EmisoraModelo implements Serializable {
 
     private final String[] nomEmisoras = {"Catalunya Ràdio","Catalunya Informació","Catalunya Mùsica ","Icat FM"};
     private final String[] urlEmisora = {
