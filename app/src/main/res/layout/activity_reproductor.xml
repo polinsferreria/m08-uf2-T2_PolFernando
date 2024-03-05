@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="71dp" />
+        tools:layout_editor_absoluteX="167dp"
+        tools:layout_editor_absoluteY="170dp" />
 
     <ImageView
         android:id="@+id/image"
@@ -20,4 +20,22 @@
         tools:layout_editor_absoluteX="63dp"
         tools:layout_editor_absoluteY="407dp"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/baseline_play_arrow_24"
+        android:text="Button"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="314dp" />
+
+    <Button
+        android:id="@+id/stop_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/baseline_stop_24"
+        android:text="Button"
+        tools:layout_editor_absoluteX="217dp"
+        tools:layout_editor_absoluteY="314dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

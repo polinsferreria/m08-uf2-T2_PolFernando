@@ -1,3 +1,5 @@
+package com.example.dam2m08uf2t2radio;
+
 public class EmisoraModelo {
 
     private final String[] nomEmisoras = {"Catalunya Ràdio","Catalunya Informació","Catalunya Mùsica ","Icat FM"};

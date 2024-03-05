@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -23,6 +25,8 @@ public class Reproductor extends AppCompatActivity {
     private boolean isPlaying = false;
     private ProgressControl progressControl;
     private ImageView imageView;
+    private Button play;
+    private Button stop;
     //private Switch bucle; //borrar
 
     @Override
@@ -37,6 +41,8 @@ public class Reproductor extends AppCompatActivity {
         this.title.setText(intent.getStringExtra("title"));//nomEmisora
         this.streamUrl = intent.getStringExtra("urlEmisora");
         this.imageView = findViewById(R.id.image);
+        this.stop = findViewById(R.id.stop_button);
+        this.play = findViewById(R.id.play_button);
         this.imageView.setImageDrawable(getDrawable(intent.getIntExtra("image",0)));
 
         this.player = MediaPlayer.create(this, intent.getIntExtra("audio", 0));
@@ -47,13 +53,27 @@ public class Reproductor extends AppCompatActivity {
             }
         });*/
 
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                startMediaPlayer();
+            }
+        });
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                stopMediaPlayer();
+            }
+        });
     }
     /*private void prepareProgressBar() {// no hace falta la linea del reproductro
         this.seekBar = this.findViewById(R.id.seekBar);
         this.seekBar.setMax(this.player.getDuration());
 
     }*/
+
     private void startMediaPlayer() {//inicia el audio :D
         if (player == null) {
             player = new MediaPlayer();
