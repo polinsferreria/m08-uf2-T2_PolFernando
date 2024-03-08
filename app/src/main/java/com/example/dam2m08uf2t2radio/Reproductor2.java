@@ -34,6 +34,8 @@ public class Reproductor2 extends AppCompatActivity {
         setContentView(R.layout.activity_reproductor);
         initializeViews();
         obtenerDatosIntent();
+        initializePlayer();
+
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +55,8 @@ public class Reproductor2 extends AppCompatActivity {
     }
 
     private void togglePlayback() {
-        if (player != null) {
+        if (player.getPlaybackState() == SimpleExoPlayer.STATE_READY) {
+            // El reproductor está preparado, se puede iniciar o pausar la reproducción
             if (player.isPlaying()) {
                 player.setPlayWhenReady(false);
                 playPauseButton.setImageResource(R.drawable.baseline_play_arrow_24);
@@ -62,8 +65,8 @@ public class Reproductor2 extends AppCompatActivity {
                 playPauseButton.setImageResource(R.drawable.baseline_stop_24);
             }
         } else {
+            // El reproductor no está preparado, se muestra el diálogo de carga
             progressDialog.show();
-            initializePlayer();
         }
     }
 
@@ -85,7 +88,15 @@ public class Reproductor2 extends AppCompatActivity {
         MediaSource mediaSource = buildMediaSource(Uri.parse(streamUrl));
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
-        progressDialog.dismiss();
+        player.addListener(new SimpleExoPlayer.EventListener() {
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                if (playbackState == SimpleExoPlayer.STATE_READY) {
+                    // Dismiss progress dialog when player is ready
+                    progressDialog.dismiss();
+                }
+            }
+        });
     }
 
     private MediaSource buildMediaSource(Uri uri) {
