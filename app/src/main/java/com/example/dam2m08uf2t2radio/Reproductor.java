@@ -1,5 +1,6 @@
 package com.example.dam2m08uf2t2radio;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -27,6 +28,7 @@ public class Reproductor extends AppCompatActivity {
     private AudioManager audioManager;
     private SeekBar volumeControl;
     private boolean isPrepared = false;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,10 @@ public class Reproductor extends AppCompatActivity {
         descripcion = findViewById(R.id.descripciontxt);
         play = findViewById(R.id.play);
         volumeControl = findViewById(R.id.volumeControl);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +92,7 @@ public class Reproductor extends AppCompatActivity {
             player.pause();
             play.setImageResource(R.drawable.baseline_play_arrow_24); // Cambiar icono a reproducir
         } else {
+            progressDialog.show(); // Mostrar el ProgressDialog antes de iniciar la preparación
             try {
                 if (player == null) {
                     initializePlayer();
@@ -114,6 +121,7 @@ public class Reproductor extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 Log.d(TAG, "MediaPlayer está preparado para reproducir.");
                 isPrepared = true;
+                progressDialog.dismiss(); // Ocultar el ProgressDialog cuando el MediaPlayer esté preparado
                 mp.start(); // Iniciar la reproducción aquí una vez que el reproductor esté preparado
             }
         });
@@ -157,4 +165,3 @@ public class Reproductor extends AppCompatActivity {
         }
     }
 }
-
