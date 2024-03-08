@@ -1,13 +1,14 @@
 package com.example.dam2m08uf2t2radio;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.WindowDecorActionBar;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -19,28 +20,36 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
 public class Reproductor2 extends AppCompatActivity {
 
-    private static final String STREAM_URL = "URL_DEL_STREAM"; // Reemplaza con la URL de tu stream
+    private static final String STREAM_URL = "URL_DEL_STREAM"; // Replace with your stream URL
     private SimpleExoPlayer player;
-    private PlayerView playerView;
     private ImageView playPauseButton;
-    private String title;
-    private String descripcion;
+    private TextView title;
+    private TextView descripcion;
     private String streamUrl;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reproductor2);
+        setContentView(R.layout.activity_reproductor);
+        initializeViews();
         obtenerDatosIntent();
-        playerView = findViewById(R.id.player_view);
-        playPauseButton = findViewById(R.id.play_pause_button);
-
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 togglePlayback();
             }
         });
+    }
+
+    private void initializeViews() {
+        title = findViewById(R.id.titol);
+        descripcion = findViewById(R.id.descripciontxt);
+        playPauseButton = findViewById(R.id.play);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
     }
 
     private void togglePlayback() {
@@ -53,6 +62,7 @@ public class Reproductor2 extends AppCompatActivity {
                 playPauseButton.setImageResource(R.drawable.baseline_stop_24);
             }
         } else {
+            progressDialog.show();
             initializePlayer();
         }
     }
@@ -61,8 +71,8 @@ public class Reproductor2 extends AppCompatActivity {
         Intent intent = getIntent();
         EmisoraModelo emisora = (EmisoraModelo) intent.getSerializableExtra("Emisora");
 
-        title = emisora.getNom();
-        descripcion = emisora.getDescripcio();
+        title.setText(emisora.getNom());
+        descripcion.setText(emisora.getDescripcio());
         streamUrl = emisora.getUrl();
     }
 
@@ -72,11 +82,10 @@ public class Reproductor2 extends AppCompatActivity {
                 .setLoadControl(new DefaultLoadControl())
                 .build();
 
-        playerView.setPlayer(player);
-
         MediaSource mediaSource = buildMediaSource(Uri.parse(streamUrl));
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
+        progressDialog.dismiss();
     }
 
     private MediaSource buildMediaSource(Uri uri) {

@@ -19,8 +19,11 @@ public class EmisoraModelo implements Serializable {
             "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
     * */
 
-    private final String[] descripcioEmissora = {"1", "2" ,"3" ,"4"};
-
+    private final String[] descripcioEmissora = {"\n" +
+            "Catalunya Ràdio és l'emissora de ràdio pública de Catalunya, oferint una àmplia varietat de programes en català sobre notícies, cultura, música i esports.",
+            "Catalunya Info és una emisora de ràdio que ofereix informació contínua sobre notícies i serveis d'interès general a Catalunya. Pertany a la CCMA i té una programació centrada en notícies i reportatges.",
+            "Catalunya Música és una emisora de ràdio pública de Catalunya, dedicada exclusivament a la música clàssica i de qualitat. Ofereix una programació variada que inclou concerts en directe, recitals, entrevistes i informació sobre el món de la música clàssica.",
+            "iCat FM és una emisora de ràdio pública de Catalunya centrada en la música i la cultura catalanes. Ofereix una programació variada amb una gran diversitat de gèneres musicals, des de la música independent fins a les últimes novetats del panorama musical català i internacional. A més de la música, iCat FM també ofereix programes culturals, entrevistes i contingut informatiu relacionat amb la música i la cultura."};
     private String nom;
 
     private String url;
