@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void  accionBoton(int num){
         EmisoraModelo em = new EmisoraModelo(num);
-        Intent i = new Intent(this, Reproductor.class);
+        Intent i = new Intent(this, Reproductor2.class);
         i.putExtra("Emisora",em);
         startActivity(i);
     }

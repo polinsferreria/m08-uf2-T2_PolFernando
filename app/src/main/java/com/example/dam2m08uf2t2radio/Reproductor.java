@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -93,62 +94,50 @@ public class Reproductor extends AppCompatActivity {
             play.setImageResource(R.drawable.baseline_play_arrow_24); // Cambiar icono a reproducir
         } else {
             progressDialog.show(); // Mostrar el ProgressDialog antes de iniciar la preparación
-            try {
-                if (player == null) {
-                    initializePlayer();
-                } else {
-                    if (isPrepared) {
-                        player.start(); // Reanudar la reproducción si está pausada
-                    }
-                }
-                play.setImageResource(R.drawable.baseline_stop_24); // Cambiar icono a pausa
-            } catch (IOException e) {
-                Log.e(TAG, "Error initializing player: " + e.getMessage());
-                Toast.makeText(this, "Error al inicializar el reproductor", Toast.LENGTH_SHORT).show();
-            }
+            new InitializePlayerTask().execute(); // Iniciar la tarea asíncrona para inicializar el reproductor
         }
     }
 
-    private void initializePlayer() throws IOException {
-        player = new MediaPlayer();
-        player.setDataSource(streamUrl);
-        player.setAudioAttributes(new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build());
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Log.d(TAG, "MediaPlayer está preparado para reproducir.");
-                isPrepared = true;
-                progressDialog.dismiss(); // Ocultar el ProgressDialog cuando el MediaPlayer esté preparado
-                mp.start(); // Iniciar la reproducción aquí una vez que el reproductor esté preparado
-            }
-        });
-        player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                // Manejar la actualización de buffering si es necesario
-                if (!isPrepared) {
-                    // Si aún no está preparado, iniciar la reproducción cuando el búfer esté listo
-                    isPrepared = true;
-                    try {
-                        player.start();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    }
+    private class InitializePlayerTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                if (player == null) {
+                    player = new MediaPlayer();
+                    player.setDataSource(streamUrl);
+                    player.setAudioAttributes(new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build());
+                    player.prepareAsync();
                 }
+            } catch (IOException e) {
+                Log.e(TAG, "Error initializing player: " + e.getMessage());
+                cancel(true);
             }
-        });
-        player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.e(TAG, "Error durante la reproducción - what: " + what + ", extra: " + extra);
-                mp.reset();
-                return false;
-            }
-        });
-        player.prepareAsync(); // Iniciar la preparación asíncrona del reproductor
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            // Ocultar el ProgressDialog cuando el MediaPlayer esté preparado
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    isPrepared = true;
+                    progressDialog.dismiss();
+                    player.start(); // Iniciar la reproducción aquí una vez que el reproductor esté preparado
+                }
+            });
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(Reproductor.this, "Error al inicializar el reproductor", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+        }
     }
 
     @Override

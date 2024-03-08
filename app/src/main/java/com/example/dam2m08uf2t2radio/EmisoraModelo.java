@@ -13,7 +13,7 @@ public class EmisoraModelo implements Serializable {
             };
 
     /*
-    https://streamingv2.shoutcast.com/beatles-radio",
+        https://streamingv2.shoutcast.com/beatles-radio",
             "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
             "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
             "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
