@@ -5,11 +5,18 @@ import java.io.Serializable;
 public class EmisoraModelo implements Serializable {
 
     private final String[] nomEmisoras = {"Catalunya Ràdio","Catalunya Informació","Catalunya Mùsica ","Icat FM"};
-    private final String[] urlEmisora = {
-            "https://shoutcast.ccma.cat/ccma/catalunyaradioHD.mp3",
+    private final String[] urlEmisora = {"https://streamingv2.shoutcast.com/beatles-radio",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            };
+
+    /*
+    "https://shoutcast.ccma.cat/ccma/catalunyaradioHD.mp3",
             "https://shoutcast.ccma.cat/ccma/catalunyainformacioHD.mp3",
             "https://shoutcast.ccma.cat/ccma/catalunyamusicaHD.mp3",
-            "https://shoutcast.ccma.cat/ccma/icatHD.mp3"};
+            "https://shoutcast.ccma.cat/ccma/icatHD.mp3"
+    * */
 
     private final String[] descripcioEmissora = {"1", "2" ,"3" ,"4"};
 
