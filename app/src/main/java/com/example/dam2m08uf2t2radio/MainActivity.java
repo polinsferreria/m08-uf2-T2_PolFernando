@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void  accionBoton(int num){
         EmisoraModelo em = new EmisoraModelo(num);
-        Intent i = new Intent(this, Reproductor2.class);
+        Intent i = new Intent(this, Reproductor.class);
         i.putExtra("Emisora",em);
         startActivity(i);
     }

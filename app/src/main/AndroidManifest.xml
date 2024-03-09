@@ -19,7 +19,7 @@
             android:name=".Reproductor"
             android:exported="false" />
         <activity
-            android:name=".Reproductor2"
+            android:name=".Reproductor"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
