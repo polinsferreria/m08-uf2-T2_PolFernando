@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -27,6 +28,8 @@ public class Reproductor extends AppCompatActivity {
     private String streamUrl;
     private ProgressDialog progressDialog;
 
+    private boolean estadoReproductor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,13 @@ public class Reproductor extends AppCompatActivity {
         initializeViews();
         obtenerDatosIntent();
         initializePlayer();
+        estadoReproductor = false;
+
+        if (savedInstanceState != null) {
+            estadoReproductor = !savedInstanceState.getBoolean("eReproductor");
+            togglePlayback();
+        }
+
 
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +51,12 @@ public class Reproductor extends AppCompatActivity {
                 togglePlayback();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("eReproductor",estadoReproductor);
     }
 
     private void initializeViews() {
@@ -54,15 +70,15 @@ public class Reproductor extends AppCompatActivity {
     }
 
     private void togglePlayback() {
+
+        estadoReproductor = !estadoReproductor;
+        // Utilizando el operador ternario para cambiar la imagen del botón según el estado del reproductor
+        playPauseButton.setImageResource((estadoReproductor) ?
+                R.drawable.baseline_stop_24 : R.drawable.baseline_play_arrow_24);
+
         if (player.getPlaybackState() == SimpleExoPlayer.STATE_READY) {
             // El reproductor está preparado, se puede iniciar o pausar la reproducción
-            if (player.isPlaying()) {
-                player.setPlayWhenReady(false);
-                playPauseButton.setImageResource(R.drawable.baseline_play_arrow_24);
-            } else {
-                player.setPlayWhenReady(true);
-                playPauseButton.setImageResource(R.drawable.baseline_stop_24);
-            }
+            player.setPlayWhenReady(estadoReproductor);
         } else {
             // El reproductor no está preparado, se muestra el diálogo de carga
             progressDialog.show();
@@ -86,13 +102,15 @@ public class Reproductor extends AppCompatActivity {
 
         MediaSource mediaSource = buildMediaSource(Uri.parse(streamUrl));
         player.prepare(mediaSource);
-        player.setPlayWhenReady(true);
+        player.setPlayWhenReady(estadoReproductor);
         player.addListener(new SimpleExoPlayer.EventListener() {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 if (playbackState == SimpleExoPlayer.STATE_READY) {
                     // Dismiss progress dialog when player is ready
                     progressDialog.dismiss();
+                    estadoReproductor = !estadoReproductor;
+                    togglePlayback();
                 }
             }
         });
