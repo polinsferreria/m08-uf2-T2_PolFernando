@@ -14,47 +14,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/descripciontxt"
         android:layout_marginTop="80dp"/>
 
     <TextView
         android:id="@+id/descripciontxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Descripció"
-        app:layout_constraintTop_toBottomOf="@+id/titol"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/volumeControl"
-        android:layout_marginTop="16dp"/>
-
-    <SeekBar
-        android:id="@+id/volumeControl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descripciontxt" />
+        app:layout_constraintTop_toBottomOf="@+id/titol" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/volumeControl"
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="play"
+        android:src="@drawable/baseline_play_arrow_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/play"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/baseline_play_arrow_24"
-            android:contentDescription="play"/>
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
