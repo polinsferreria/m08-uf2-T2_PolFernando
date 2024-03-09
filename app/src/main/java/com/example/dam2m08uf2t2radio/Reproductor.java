@@ -41,7 +41,12 @@ public class Reproductor extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             estadoReproductor = !savedInstanceState.getBoolean("eReproductor");
+            // PlayerSerializable ps = (PlayerSerializable) savedInstanceState.getSerializable("player");
+            // player = ps.getPlayer();
             togglePlayback();
+        }else{
+            // initializePlayer();
+            // estadoReproductor = false;
         }
 
 
@@ -57,6 +62,8 @@ public class Reproductor extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("eReproductor",estadoReproductor);
+        PlayerSerializable ps = new PlayerSerializable(player);
+        outState.putSerializable("player",ps);
     }
 
     private void initializeViews() {

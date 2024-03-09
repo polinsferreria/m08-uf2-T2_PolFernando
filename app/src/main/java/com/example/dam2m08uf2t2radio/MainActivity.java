@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private void anyadirActionListenerBotones() {
 
         ArrayList<ImageButton> botones = new ArrayList<>();
-
         ImageButton b1 = findViewById(R.id.button1);
         botones.add(b1);
         ImageButton b2 = findViewById(R.id.button2);
@@ -42,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     accionBoton(botones.indexOf(b));
                 }
             });
-
         }
-
     }
     private void  accionBoton(int num){
         EmisoraModelo em = new EmisoraModelo(num);
