@@ -55,18 +55,20 @@ public class RadioService extends Service {
             manager.createNotificationChannel(channel);
         }
     }
-
     private Notification createNotification() {
         Intent intent = new Intent(this, Reproductor.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Radio en reproducción")
+                .setContentText("Descripción de la transmisión")
                 .setSmallIcon(R.drawable.catalunyam)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Descripción más detallada de la transmisión"))
                 .build();
     }
+
 
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(this)
