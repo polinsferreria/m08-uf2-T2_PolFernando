@@ -1,9 +1,5 @@
 package com.example.dam2m08uf2t2radio;
 
-import static androidx.appcompat.graphics.drawable.DrawableContainerCompat.Api21Impl.getResources;
-
-import android.graphics.drawable.Drawable;
-
 import java.io.Serializable;
 
 public class EmisoraModelo implements Serializable {
