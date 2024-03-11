@@ -27,6 +27,7 @@ public class RadioService extends Service {
     private String STREAM_URL = "";
 
     private SimpleExoPlayer player;
+    private int icono;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -62,7 +63,7 @@ public class RadioService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Radio en reproducción")
                 .setContentText("Descripción de la transmisión")
-                .setSmallIcon(R.drawable.catalunyam)
+                .setSmallIcon(icono)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText("Descripción más detallada de la transmisión"))
@@ -99,6 +100,7 @@ public class RadioService extends Service {
             EmisoraModelo emisora = (EmisoraModelo) intent.getSerializableExtra("emisora");
             if (emisora != null) {
                 STREAM_URL = emisora.getUrl();
+                icono = emisora.getDraw();
             }
         }
     }
