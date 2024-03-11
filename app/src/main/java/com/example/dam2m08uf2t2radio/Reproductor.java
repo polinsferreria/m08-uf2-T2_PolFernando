@@ -39,9 +39,7 @@ public class Reproductor extends AppCompatActivity {
         if (savedInstanceState != null){
             isServiceRunning = (boolean) savedInstanceState.get("isService");
             serviceIntent = (Intent) savedInstanceState.get("intent");
-            updateButtonIcon();
         }
-
         updateButtonIcon();
     }
 
@@ -88,10 +86,15 @@ public class Reproductor extends AppCompatActivity {
         if (save) {
             serviceIntent = intent.getParcelableExtra("intent");
             if (serviceIntent != null && intent.getIntExtra("num", -1) == em.getNum()) {
+                System.out.println(intent.getIntExtra("num",-1)  + " " + em.getNum());
+                System.out.println("hola");
                 isServiceRunning = true;
-                updateButtonIcon();
+            } else{
+                isServiceRunning = false;
+
             }
         }
+        updateButtonIcon();
     }
     @Override
     protected void onDestroy() {
@@ -101,6 +104,7 @@ public class Reproductor extends AppCompatActivity {
 
     private void setResultAndFinish() {
         Intent resultIntent = new Intent();
+
         if (isServiceRunning) {
             resultIntent.putExtra("intent", serviceIntent);
             resultIntent.putExtra("num", em.getNum());
@@ -115,4 +119,6 @@ public class Reproductor extends AppCompatActivity {
         outState.putBoolean("isService", isServiceRunning);
         outState.putParcelable("intent", serviceIntent);
     }
+
+
 }
