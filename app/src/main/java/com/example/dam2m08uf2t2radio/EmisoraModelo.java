@@ -30,11 +30,14 @@ public class EmisoraModelo implements Serializable {
 
     private String descripcio;
 
+    private int num;
+
     public EmisoraModelo(int emisora) {
         if (emisora < nomEmisoras.length){
             nom = this.nomEmisoras[emisora];
             url = this.urlEmisora[emisora];
             descripcio = this.descripcioEmissora[emisora];
+            num = emisora;
         }
     }
 
@@ -49,4 +52,9 @@ public class EmisoraModelo implements Serializable {
     public String getDescripcio() {
         return descripcio;
     }
+
+    public int getNum(){
+        return num;
+    }
+
 }
