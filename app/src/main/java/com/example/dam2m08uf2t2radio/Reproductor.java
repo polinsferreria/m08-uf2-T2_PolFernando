@@ -59,6 +59,7 @@ public class Reproductor extends AppCompatActivity {
 
         serviceIntent = new Intent(Reproductor.this, RadioService.class);
         serviceIntent.putExtra("emisora", em);
+        serviceIntent.putExtra("service",serviceIntent);
         startService(serviceIntent);
         isServiceRunning = true;
         updateButtonIcon();

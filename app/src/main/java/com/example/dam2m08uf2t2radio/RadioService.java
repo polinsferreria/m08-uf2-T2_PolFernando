@@ -1,15 +1,20 @@
 // RadioService.java
 package com.example.dam2m08uf2t2radio;
 
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+
 
 import androidx.core.app.NotificationCompat;
 
@@ -23,11 +28,13 @@ import com.google.android.exoplayer2.util.Util;
 public class RadioService extends Service {
 
     private static final String CHANNEL_ID = "RadioChannel";
-    private static final int NOTIFICATION_ID = 123;
+    private static final int NOTIFICATION_ID = 1;
     private String STREAM_URL = "";
-
     private SimpleExoPlayer player;
     private int icono;
+    private String nom;
+    private int numeroEmisora;
+    private Intent serviceIntent;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -51,24 +58,53 @@ public class RadioService extends Service {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Radio Channel", NotificationManager.IMPORTANCE_HIGH);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            CharSequence channelName = "Radio Channel";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
+
+            // Configure the channel's behavior
+            channel.setDescription("Channel description");
+            channel.enableLights(false);
+            channel.enableVibration(false);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
+
     private Notification createNotification() {
         Intent intent = new Intent(this, Reproductor.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        intent.putExtra("Emisora",new EmisoraModelo(numeroEmisora));
+        intent.putExtra("intent",serviceIntent);
+        intent.putExtra("num",numeroEmisora);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Radio en reproducción")
+        //BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), icono));
+
+        // Definir el tamaño deseado del icono (por ejemplo, 48x48 píxeles)
+       // int tamañoIconoPx = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
+        //bitmapDrawable.setBounds(0, 0, tamañoIconoPx, tamañoIconoPx);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Radio en reproducció "  +  nom)
                 .setContentText("Descripción de la transmisión")
                 .setSmallIcon(icono)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("Descripción más detallada de la transmisión"))
-                .build();
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Descripción más detallada de la transmisión"));
 
+        Notification notification = notificationBuilder.build();
+
+        // Agregar logs para verificar la creación de la notificación
+
+        if (notification != null) {
+            Log.d("RadioService", "Notificación creada correctamente.");
+        } else {
+            Log.e("RadioService", "Error al crear la notificación.");
+        }
+
+        return notification;
     }
 
 
@@ -101,6 +137,9 @@ public class RadioService extends Service {
             if (emisora != null) {
                 STREAM_URL = emisora.getUrl();
                 icono = emisora.getDraw();
+                nom = emisora.getNom();
+                numeroEmisora = emisora.getNum();
+
             }
         }
     }
