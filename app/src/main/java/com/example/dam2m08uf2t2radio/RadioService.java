@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.Serializable;
+
 public class RadioService extends Service {
 
     private static final String CHANNEL_ID = "RadioChannel";
@@ -74,9 +76,9 @@ public class RadioService extends Service {
 
     private Notification createNotification() {
         Intent intent = new Intent(this, Reproductor.class);
-        intent.putExtra("Emisora",new EmisoraModelo(numeroEmisora));
-        intent.putExtra("intent",serviceIntent);
+        intent.putExtra("Emisora",(Serializable) new EmisoraModelo(numeroEmisora));
         intent.putExtra("num",numeroEmisora);
+        intent.putExtra("intent", serviceIntent);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -139,6 +141,7 @@ public class RadioService extends Service {
                 icono = emisora.getDraw();
                 nom = emisora.getNom();
                 numeroEmisora = emisora.getNum();
+                serviceIntent = intent;
 
             }
         }

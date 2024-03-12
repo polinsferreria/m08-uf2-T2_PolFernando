@@ -3,6 +3,7 @@ package com.example.dam2m08uf2t2radio;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,7 +60,6 @@ public class Reproductor extends AppCompatActivity {
 
         serviceIntent = new Intent(Reproductor.this, RadioService.class);
         serviceIntent.putExtra("emisora", em);
-        serviceIntent.putExtra("service",serviceIntent);
         startService(serviceIntent);
         isServiceRunning = true;
         updateButtonIcon();
