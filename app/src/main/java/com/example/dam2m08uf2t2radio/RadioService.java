@@ -1,6 +1,7 @@
 // RadioService.java
 package com.example.dam2m08uf2t2radio;
 
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,9 +9,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+
 
 import androidx.core.app.NotificationCompat;
 
@@ -21,13 +26,17 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.Serializable;
+
 public class RadioService extends Service {
 
     private static final String CHANNEL_ID = "RadioChannel";
-    private static final int NOTIFICATION_ID = 123;
+    private static final int NOTIFICATION_ID = 1;
     private String STREAM_URL = "";
-
     private SimpleExoPlayer player;
+    private String nom;
+    private int numeroEmisora;
+    private Intent serviceIntent;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -51,14 +60,18 @@ public class RadioService extends Service {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Radio Channel", NotificationManager.IMPORTANCE_HIGH);
-            //NotificationManager manager = getSystemService(NotificationManager.class);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (manager != null){
-                manager.createNotificationChannel(channel);
-            } else {
-                System.out.println("--------------------------------------------------------");
-            }
+
+            CharSequence channelName = "Radio Channel";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
+
+            // Configure the channel's behavior
+            channel.setDescription("Channel description");
+            channel.enableLights(false);
+            channel.enableVibration(true);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
 
         }else{
             System.err.println("No es la version correcta");
@@ -67,21 +80,39 @@ public class RadioService extends Service {
 
     private Notification createNotification() {
         Intent intent = new Intent(this, Reproductor.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        intent.putExtra("Emisora",(Serializable) new EmisoraModelo(numeroEmisora));
+        intent.putExtra("num",numeroEmisora);
+        intent.putExtra("intent", serviceIntent);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-                this, CHANNEL_ID);
-        Notification notification = notificationBuilder.setOngoing(true)
-                //.setSmallIcon(R.drawable.catalunyam)
-                .setContentTitle("Radio en reproducción")
-                //.setContentText("Temporitzador de: "+this.seg+" segons.")
+        //BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), icono));
+
+        // Definir el tamaño deseado del icono (por ejemplo, 48x48 píxeles)
+       // int tamañoIconoPx = getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
+        //bitmapDrawable.setBounds(0, 0, tamañoIconoPx, tamañoIconoPx);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Radio en reproducció "  +  nom)
+                .setContentText("Descripción de la transmisión")
+                .setSmallIcon(R.drawable.ic_action_icono_radio)
                 .setContentIntent(pendingIntent)
-                .setChannelId(CHANNEL_ID).
-                setPriority(NotificationCompat.PRIORITY_HIGH)
-                .build();
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Descripción más detallada de la transmisión"));
+
+        Notification notification = notificationBuilder.build();
+
+        // Agregar logs para verificar la creación de la notificación
+
+        if (notification != null) {
+            Log.d("RadioService", "Notificación creada correctamente.");
+        } else {
+            Log.e("RadioService", "Error al crear la notificación.");
+        }
 
         return notification;
     }
+
 
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(this)
@@ -111,6 +142,11 @@ public class RadioService extends Service {
             EmisoraModelo emisora = (EmisoraModelo) intent.getSerializableExtra("emisora");
             if (emisora != null) {
                 STREAM_URL = emisora.getUrl();
+                //icono = emisora.getDraw();
+                nom = emisora.getNom();
+                numeroEmisora = emisora.getNum();
+                serviceIntent = intent;
+
             }
         }
     }

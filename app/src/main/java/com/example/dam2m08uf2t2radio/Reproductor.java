@@ -3,10 +3,12 @@ package com.example.dam2m08uf2t2radio;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,16 +29,19 @@ public class Reproductor extends AppCompatActivity {
         title = findViewById(R.id.titol);
         description = findViewById(R.id.descripciontxt);
 
-
-
         playPauseButton = findViewById(R.id.play);
         playPauseButton.setOnClickListener(v -> toggleService());
 
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> setResultAndFinish());
 
-        obtainIntentData();
+        obtainIntentData(savedInstanceState == null);
 
+        if (savedInstanceState != null){
+            isServiceRunning = (boolean) savedInstanceState.get("isService");
+            serviceIntent = (Intent) savedInstanceState.get("intent");
+        }
+        updateButtonIcon();
     }
 
     private void toggleService() {
@@ -48,55 +53,59 @@ public class Reproductor extends AppCompatActivity {
     }
 
     private void startService() {
-
-        if (serviceIntent != null){
-            stopService();
+        if (serviceIntent != null) {
+            stopService(serviceIntent);
             serviceIntent = null;
-            startService();
-
-        } else{
-            serviceIntent = new Intent(Reproductor.this, RadioService.class);
-            serviceIntent.putExtra("emisora", em);
-            startService(serviceIntent);
-            isServiceRunning = true;
-            updateButtonIcon();
         }
 
+        serviceIntent = new Intent(Reproductor.this, RadioService.class);
+        serviceIntent.putExtra("emisora", em);
+        startService(serviceIntent);
+        isServiceRunning = true;
+        updateButtonIcon();
     }
 
     private void stopService() {
-        stopService(serviceIntent);
-        isServiceRunning = false;
-        updateButtonIcon();
+        if (serviceIntent != null) {
+            stopService(serviceIntent);
+            serviceIntent = null;
+            isServiceRunning = false;
+            updateButtonIcon();
+        }
     }
 
     private void updateButtonIcon() {
         playPauseButton.setImageResource(isServiceRunning ? R.drawable.baseline_stop_24 : R.drawable.baseline_play_arrow_24);
     }
 
-    private void obtainIntentData() {
+    private void obtainIntentData(boolean save) {
         Intent intent = getIntent();
         em = (EmisoraModelo) intent.getSerializableExtra("Emisora");
         title.setText(em.getNom());
         description.setText(em.getDescripcio());
-        serviceIntent = intent.getParcelableExtra("intent");
 
-        if (serviceIntent != null &&
-                intent.getIntExtra("num",50) == em.getNum()){
-            isServiceRunning = true;
-            updateButtonIcon();
+        if (save) {
+            serviceIntent = intent.getParcelableExtra("intent");
+            if (serviceIntent != null && intent.getIntExtra("num", -1) == em.getNum()) {
+                System.out.println(intent.getIntExtra("num",-1)  + " " + em.getNum());
+                System.out.println("hola");
+                isServiceRunning = true;
+            } else{
+                isServiceRunning = false;
+
+            }
         }
-        System.out.println(serviceIntent);
+        updateButtonIcon();
     }
-
     @Override
     protected void onDestroy() {
-        setResultAndFinish();
+        //setResultAndFinish();
         super.onDestroy();
     }
 
     private void setResultAndFinish() {
         Intent resultIntent = new Intent();
+
         if (isServiceRunning) {
             resultIntent.putExtra("intent", serviceIntent);
             resultIntent.putExtra("num", em.getNum());
@@ -104,4 +113,13 @@ public class Reproductor extends AppCompatActivity {
         }
         finish();
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isService", isServiceRunning);
+        outState.putParcelable("intent", serviceIntent);
+    }
+
+
 }

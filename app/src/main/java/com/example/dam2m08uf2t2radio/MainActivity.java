@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         intentService = result.getData().getParcelableExtra("intent");
-                        num = result.getData().getIntExtra("num",50);
+                        num = result.getData().getIntExtra("num",-1);
                         System.out.println(intentService);
                         System.out.println("result");
+                        System.out.println(num);
                     }
                 });
     }
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         EmisoraModelo em = new EmisoraModelo(num);
         Intent intent = new Intent(this, Reproductor.class);
         intent.putExtra("Emisora", em);
-        intent.putExtra("num",num);
+        intent.putExtra("num",this.num);
         intent.putExtra("intent", intentService);
         launcher.launch(intent);
     }
