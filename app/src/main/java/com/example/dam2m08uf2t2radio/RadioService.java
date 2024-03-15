@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -51,8 +52,16 @@ public class RadioService extends Service {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Radio Channel", NotificationManager.IMPORTANCE_HIGH);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            //NotificationManager manager = getSystemService(NotificationManager.class);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null){
+                manager.createNotificationChannel(channel);
+            } else {
+                System.out.println("--------------------------------------------------------");
+            }
+
+        }else{
+            System.err.println("No es la version correcta");
         }
     }
 
@@ -60,12 +69,18 @@ public class RadioService extends Service {
         Intent intent = new Intent(this, Reproductor.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+                this, CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                //.setSmallIcon(R.drawable.catalunyam)
                 .setContentTitle("Radio en reproducción")
-                .setSmallIcon(R.drawable.catalunyam)
+                //.setContentText("Temporitzador de: "+this.seg+" segons.")
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setChannelId(CHANNEL_ID).
+                setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();
+
+        return notification;
     }
 
     private void initializePlayer() {
