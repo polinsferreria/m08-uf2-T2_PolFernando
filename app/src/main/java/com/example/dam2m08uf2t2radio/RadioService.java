@@ -54,9 +54,12 @@ public class RadioService extends Service {
 
     @Override
     public void onDestroy() {
+        // Liberar el reproductor y detener el servicio
         releasePlayer();
+        stopSelf();
         super.onDestroy();
     }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -99,17 +99,26 @@ public class Reproductor extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
-        //setResultAndFinish();
         super.onDestroy();
+        // Detener el servicio cuando la actividad se destruye
+        stopServiceIfNeeded();
+    }
+
+    private void stopServiceIfNeeded() {
+        if (!isChangingConfigurations() && !isFinishing() && isServiceRunning) {
+            stopService(serviceIntent);
+        }
     }
 
     private void setResultAndFinish() {
         Intent resultIntent = new Intent();
 
+        setResult(RESULT_OK, resultIntent);
         if (isServiceRunning) {
             resultIntent.putExtra("intent", serviceIntent);
             resultIntent.putExtra("num", em.getNum());
-            setResult(RESULT_OK, resultIntent);
+        }else{
+            resultIntent.putExtra("num", -1);
         }
         finish();
     }
