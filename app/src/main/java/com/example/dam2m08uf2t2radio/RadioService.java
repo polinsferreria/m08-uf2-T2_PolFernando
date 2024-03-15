@@ -71,6 +71,8 @@ public class RadioService extends Service {
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }else{
+            System.out.println("no hay notification chanel");
         }
     }
 
